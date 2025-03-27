@@ -1,0 +1,27 @@
+name: SonarCloud PR Scan
+
+on:  
+  pull_request:  # Runs on pull requests
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run SonarCloud Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn clean verify sonar:sonar 
+            -Dsonar.organization=devopstct 
+            -Dsonar.projectKey=devopstct
+            -Dsonar.host.url=https://sonarcloud.io
